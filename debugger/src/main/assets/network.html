@@ -702,19 +702,15 @@
                 bodyP.appendChild(bodySpan);
                 setLogItemClassName(logLine, bodySpan);
 
+                let bodyStr = getSimpleText(logLine.body);
                 bodySpan.classList.add("detail-log-item");
                 bodySpan.title = "Copy";
                 bodySpan.onclick = function () {
-                    let bodyPreStr = bodyP.nextElementSibling.innerHTML;
-                    if (navigator.clipboard) {
-                        navigator.clipboard.writeText(bodyPreStr);
-                    } else {
-                        alert("Your browser doesn't support");
-                    }
+                    copyToClipboard(bodyStr);
                 };
 
                 let bodyPre = document.createElement("pre");
-                bodyPre.innerHTML = setBodyLinkable(getSimpleText(logLine.body));
+                bodyPre.innerHTML = setBodyLinkable(bodyStr);
                 bodyPre.className = "default-item-space query-body";
 
                 requestBodyDiv.appendChild(document.createElement("br"));
