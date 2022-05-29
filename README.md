@@ -1,5 +1,5 @@
 # Android Remote Debugger
-[![](https://jitpack.io/v/chenyue404/ThemeImageView.svg)](https://jitpack.io/#chenyue404/ThemeImageView)
+[![](https://jitpack.io/v/chenyue404/android-remote-debugger.svg)](https://jitpack.io/#chenyue404/android-remote-debugger)
 [![API](https://img.shields.io/badge/API-21%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=21)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/zerobranch/android-remote-debugger/blob/master/LICENSE)
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Android%20Remote%20Debugger-green.svg?style=flat)](https://android-arsenal.com/details/1/8040)
