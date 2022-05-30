@@ -6,6 +6,13 @@
 
 **Android Remote Debugger** is a library for remote debugging Android applications. It allows you to view logs, databases, shared preferences and network requests directly in the browser.
 
+
+## Chenyue's modification
+
+1. Change server ip to 0.0.0.0
+2. Click to copy body
+
+
 ### Choose language
 [English](https://github.com/zerobranch/android-remote-debugger/blob/master/README.md) 
 
@@ -48,7 +55,7 @@ allprojects {
 Add the following dependency to your module's build.gradle:
 ```groovy
 dependencies {
-    debugImplementation 'com.github.chenyue404:android-remote-debugger:1.0.2'
+    debugImplementation 'com.github.chenyue404:android-remote-debugger:$version'
     releaseImplementation 'com.github.zerobranch.android-remote-debugger:noop:1.1.2'
 }
 ```
