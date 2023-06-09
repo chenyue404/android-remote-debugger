@@ -111,6 +111,7 @@ class AppNotification {
                 .setContentTitle(title)
                 .setContentText(description)
                 .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setOngoing(true)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(description))
                 .setAutoCancel(true);
 
