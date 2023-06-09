@@ -30,4 +30,5 @@ dependencies {
     implementation "androidx.appcompat:appcompat:1.4.1"
     implementation "com.squareup.okhttp3:okhttp:4.9.1"
     implementation "com.squareup.okhttp3:logging-interceptor:4.9.1"
+//    implementation 'com.github.chenyue404:android-remote-debugger:1.0.2'
 }

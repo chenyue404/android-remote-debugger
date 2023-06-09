@@ -1,10 +1,17 @@
 # Android Remote Debugger
-[![](https://jitpack.io/v/zerobranch/android-remote-debugger.svg)](https://jitpack.io/#zerobranch/android-remote-debugger) 
+[![](https://jitpack.io/v/chenyue404/android-remote-debugger.svg)](https://jitpack.io/#chenyue404/android-remote-debugger)
 [![API](https://img.shields.io/badge/API-21%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=21)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/zerobranch/android-remote-debugger/blob/master/LICENSE)
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Android%20Remote%20Debugger-green.svg?style=flat)](https://android-arsenal.com/details/1/8040)
 
 **Android Remote Debugger** is a library for remote debugging Android applications. It allows you to view logs, databases, shared preferences and network requests directly in the browser.
+
+
+## Chenyue's modification
+
+1. Change server ip to 0.0.0.0
+2. Click to copy body
+
 
 ### Choose language
 [English](https://github.com/zerobranch/android-remote-debugger/blob/master/README.md) 
@@ -48,7 +55,7 @@ allprojects {
 Add the following dependency to your module's build.gradle:
 ```groovy
 dependencies {
-    debugImplementation 'com.github.zerobranch.android-remote-debugger:debugger:1.1.2'
+    debugImplementation 'com.github.chenyue404:android-remote-debugger:$version'
     releaseImplementation 'com.github.zerobranch.android-remote-debugger:noop:1.1.2'
 }
 ```
