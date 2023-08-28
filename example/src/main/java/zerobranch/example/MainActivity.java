@@ -4,11 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import androidx.appcompat.app.AppCompatActivity;
 
-import zerobranch.example.db.DBHelper;
-import zerobranch.androidremotedebugger.AndroidRemoteDebugger;
-import zerobranch.androidremotedebugger.logging.NetLoggingInterceptor;
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -19,6 +16,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import zerobranch.androidremotedebugger.AndroidRemoteDebugger;
+import zerobranch.example.db.DBHelper;
 
 public class MainActivity extends AppCompatActivity {
     DBHelper dbHelper;
@@ -114,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
     private void send(String url) {
         new Thread(() -> {
             OkHttpClient client = new OkHttpClient.Builder()
-                    .addInterceptor(new NetLoggingInterceptor())
+//                    .addInterceptor(new NetLoggingInterceptor())
                     .build();
 
             RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), "{\"name\": \"Mercury\", \"radius\": 2439.7}");

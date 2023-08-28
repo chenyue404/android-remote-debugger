@@ -18,14 +18,19 @@ package zerobranch.androidremotedebugger;
 import android.app.ActivityManager;
 import android.content.Context;
 
+import org.jetbrains.annotations.NotNull;
+
+import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedHelpers;
+import okhttp3.OkHttpClient;
+import top.canyie.pine.PineConfig;
 import zerobranch.androidremotedebugger.logging.DefaultLogger;
 import zerobranch.androidremotedebugger.logging.Logger;
+import zerobranch.androidremotedebugger.logging.NetLoggingInterceptor;
 import zerobranch.androidremotedebugger.logging.RemoteLog;
 import zerobranch.androidremotedebugger.settings.InternalSettings;
 import zerobranch.androidremotedebugger.source.local.LogLevel;
 import zerobranch.androidremotedebugger.source.managers.ContinuousDBManager;
-
-import org.jetbrains.annotations.NotNull;
 
 public final class AndroidRemoteDebugger {
     private static final int DEFAULT_PORT = 8080;
@@ -52,6 +57,18 @@ public final class AndroidRemoteDebugger {
         instance = androidRemoteDebugger;
         isEnable = androidRemoteDebugger.builder.enabled;
         isEnabledNotifications = androidRemoteDebugger.builder.enabledNotifications;
+
+        PineConfig.debug = true; // 是否debug，true会输出较详细log
+        PineConfig.debuggable = BuildConfig.DEBUG; // 该应用是否可调试，建议和配置文件中的值保持一致，否则会出现问题
+
+        XposedHelpers.findAndHookMethod(OkHttpClient.Builder.class, "build", new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                XposedHelpers.callMethod(param.thisObject,
+                        "addInterceptor",
+                        new NetLoggingInterceptor());
+            }
+        });
 
         if (!isEnable) {
             stop();
@@ -90,6 +107,8 @@ public final class AndroidRemoteDebugger {
                 remoteLog = new RemoteLog(androidRemoteDebugger.builder.logger);
             }
         });
+
+
     }
 
     public synchronized static void stop() {
