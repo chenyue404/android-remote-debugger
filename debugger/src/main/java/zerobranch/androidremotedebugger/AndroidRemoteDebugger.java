@@ -22,7 +22,6 @@ import org.jetbrains.annotations.NotNull;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
-import okhttp3.OkHttpClient;
 import top.canyie.pine.PineConfig;
 import zerobranch.androidremotedebugger.logging.DefaultLogger;
 import zerobranch.androidremotedebugger.logging.Logger;
@@ -61,14 +60,17 @@ public final class AndroidRemoteDebugger {
         PineConfig.debug = true; // 是否debug，true会输出较详细log
         PineConfig.debuggable = BuildConfig.DEBUG; // 该应用是否可调试，建议和配置文件中的值保持一致，否则会出现问题
 
-        XposedHelpers.findAndHookMethod(OkHttpClient.Builder.class, "build", new XC_MethodHook() {
-            @Override
-            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                XposedHelpers.callMethod(param.thisObject,
-                        "addInterceptor",
-                        new NetLoggingInterceptor());
-            }
-        });
+        XposedHelpers.findAndHookMethod("okhttp3.OkHttpClient.Builder",
+                androidRemoteDebugger.getClass().getClassLoader(),
+                "build",
+                new XC_MethodHook() {
+                    @Override
+                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                        XposedHelpers.callMethod(param.thisObject,
+                                "addInterceptor",
+                                new NetLoggingInterceptor());
+                    }
+                });
 
         if (!isEnable) {
             stop();
