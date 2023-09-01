@@ -23,7 +23,6 @@ import org.jetbrains.annotations.NotNull;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import okhttp3.OkHttpClient;
-import top.canyie.pine.PineConfig;
 import zerobranch.androidremotedebugger.logging.DefaultLogger;
 import zerobranch.androidremotedebugger.logging.Logger;
 import zerobranch.androidremotedebugger.logging.NetLoggingInterceptor;
@@ -58,8 +57,8 @@ public final class AndroidRemoteDebugger {
         isEnable = androidRemoteDebugger.builder.enabled;
         isEnabledNotifications = androidRemoteDebugger.builder.enabledNotifications;
 
-        PineConfig.debug = true; // 是否debug，true会输出较详细log
-        PineConfig.debuggable = BuildConfig.DEBUG; // 该应用是否可调试，建议和配置文件中的值保持一致，否则会出现问题
+//        PineConfig.debug = true; // 是否debug，true会输出较详细log
+//        PineConfig.debuggable = BuildConfig.DEBUG; // 该应用是否可调试，建议和配置文件中的值保持一致，否则会出现问题
 
         XposedHelpers.findAndHookConstructor(
                 OkHttpClient.class,
@@ -69,7 +68,7 @@ public final class AndroidRemoteDebugger {
                     protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                         OkHttpClient.Builder builder = (OkHttpClient.Builder) param.args[0];
                         builder.addInterceptor(new NetLoggingInterceptor());
-                        android.util.Log.d("123123", "beforeHookedMethod: ");
+                        param.args[0] = builder;
                     }
                 }
         );
@@ -94,22 +93,19 @@ public final class AndroidRemoteDebugger {
                 builder.enabledJsonPrettyPrint
         );
 
-        ServerRunner.getInstance().init(builder.context, internalSettings, builder.port, new ServerRunner.ConnectionStatus() {
-            @Override
-            public void onResult(boolean isSuccessRunning, String ipPort) {
-                if (isEnabledNotifications) {
-                    AppNotification.init(builder.context);
+        ServerRunner.getInstance().init(builder.context, internalSettings, builder.port, (isSuccessRunning, ipPort) -> {
+            if (isEnabledNotifications) {
+                AppNotification.init(builder.context);
 
-                    if (isSuccessRunning) {
-                        AppNotification.notify("Successfully", String.format("http://%s", ipPort));
-                    } else {
-                        AppNotification.notifyError("Failed connection", String.format("%s is busy", ipPort));
-                    }
+                if (isSuccessRunning) {
+                    AppNotification.notify("Successfully", String.format("http://%s", ipPort));
+                } else {
+                    AppNotification.notifyError("Failed connection", String.format("%s is busy", ipPort));
                 }
-
-                ContinuousDBManager.init(builder.context);
-                remoteLog = new RemoteLog(androidRemoteDebugger.builder.logger);
             }
+
+            ContinuousDBManager.init(builder.context);
+            remoteLog = new RemoteLog(androidRemoteDebugger.builder.logger);
         });
 
 
