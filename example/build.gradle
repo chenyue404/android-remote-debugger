@@ -31,4 +31,5 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:4.9.1"
     implementation "com.squareup.okhttp3:logging-interceptor:4.9.1"
 //    implementation 'com.github.chenyue404:android-remote-debugger:1.0.2'
+//    implementation 'com.github.chenyue404:androidremotedebugger:1.0.0'
 }

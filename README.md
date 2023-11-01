@@ -11,6 +11,7 @@
 
 1. Change server ip to 0.0.0.0
 2. Click to copy body
+3. Auto add NetLoggingInterceptor, add NetLoggingInterceptor to whole app in module.
 
 
 ### Choose language
