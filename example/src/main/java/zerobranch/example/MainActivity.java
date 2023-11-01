@@ -123,6 +123,8 @@ public class MainActivity extends AppCompatActivity {
                     .addHeader("Api-key", "jfp74mvnWRQWRQWRf83Tls3j")
                     .addHeader("Token", "hdsjJ7f3Hkd7EWTHSDV32hfGJSAj72l")
                     .addHeader("DeviceId", "whs67DFSWE2gjfDADSUg4")
+                    .addHeader("DeviceId", "whs67DFSWE2gjfDADSUg4")
+                    .addHeader("DeviceId", "whs67DFSWE2gjfDADSUg4")
                     .build();
 
             try {
@@ -131,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
                         .execute();
                 System.out.println(response.body().string());
             } catch (IOException e) {
-//                e.printStackTrace();
+                e.printStackTrace();
             }
         }).start();
     }

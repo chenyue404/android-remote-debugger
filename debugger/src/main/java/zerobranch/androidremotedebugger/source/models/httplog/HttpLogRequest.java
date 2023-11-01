@@ -15,7 +15,7 @@
  */
 package zerobranch.androidremotedebugger.source.models.httplog;
 
-import java.util.Map;
+import java.util.ArrayList;
 
 public class HttpLogRequest {
     public long id;
@@ -28,5 +28,5 @@ public class HttpLogRequest {
     public String requestContentType;
     public String bodySize;
     public String body;
-    public Map<String, String> headers;
+    public ArrayList<String> headers;
 }

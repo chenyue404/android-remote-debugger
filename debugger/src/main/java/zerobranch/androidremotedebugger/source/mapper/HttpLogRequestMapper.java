@@ -15,13 +15,12 @@
  */
 package zerobranch.androidremotedebugger.source.mapper;
 
+import java.util.ArrayList;
+
 import zerobranch.androidremotedebugger.source.local.Constants;
 import zerobranch.androidremotedebugger.source.models.httplog.HttpLogModel;
 import zerobranch.androidremotedebugger.source.models.httplog.HttpLogRequest;
 import zerobranch.androidremotedebugger.source.models.httplog.QueryType;
-
-import java.util.ArrayList;
-import java.util.Map;
 
 public class HttpLogRequestMapper {
 
@@ -40,10 +39,9 @@ public class HttpLogRequestMapper {
         httpLogModel.queryType = QueryType.REQUEST;
 
         httpLogModel.headers = new ArrayList<>();
-        if (request.headers != null) {
-            for (Map.Entry<String, String> header : request.headers.entrySet()) {
-                httpLogModel.headers.add(header.getKey() + ": " + header.getValue());
-            }
+        ArrayList<String> headers = request.headers;
+        if (null != headers) {
+            httpLogModel.headers.addAll(headers);
         }
         return httpLogModel;
     }

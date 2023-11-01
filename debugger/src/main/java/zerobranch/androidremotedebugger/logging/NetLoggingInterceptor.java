@@ -15,13 +15,7 @@
  */
 package zerobranch.androidremotedebugger.logging;
 
-import zerobranch.androidremotedebugger.AndroidRemoteDebugger;
-import zerobranch.androidremotedebugger.source.managers.ContinuousDBManager;
-import zerobranch.androidremotedebugger.source.mapper.HttpLogRequestMapper;
-import zerobranch.androidremotedebugger.source.mapper.HttpLogResponseMapper;
-import zerobranch.androidremotedebugger.source.models.httplog.HttpLogModel;
-import zerobranch.androidremotedebugger.source.models.httplog.HttpLogRequest;
-import zerobranch.androidremotedebugger.source.models.httplog.HttpLogResponse;
+import android.util.Log;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -30,7 +24,7 @@ import java.net.InetAddress;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import okhttp3.Headers;
@@ -44,6 +38,13 @@ import okhttp3.internal.http.HttpHeaders;
 import okio.Buffer;
 import okio.BufferedSource;
 import okio.GzipSource;
+import zerobranch.androidremotedebugger.AndroidRemoteDebugger;
+import zerobranch.androidremotedebugger.source.managers.ContinuousDBManager;
+import zerobranch.androidremotedebugger.source.mapper.HttpLogRequestMapper;
+import zerobranch.androidremotedebugger.source.mapper.HttpLogResponseMapper;
+import zerobranch.androidremotedebugger.source.models.httplog.HttpLogModel;
+import zerobranch.androidremotedebugger.source.models.httplog.HttpLogRequest;
+import zerobranch.androidremotedebugger.source.models.httplog.HttpLogResponse;
 
 public class NetLoggingInterceptor implements Interceptor {
     private static final Charset UTF8 = StandardCharsets.UTF_8;
@@ -79,11 +80,12 @@ public class NetLoggingInterceptor implements Interceptor {
         logRequest.port = String.valueOf(request.url().port());
 
         Headers headers = request.headers();
-        logRequest.headers = new HashMap<>();
+        logRequest.headers = new ArrayList<>();
         for (int i = 0, count = headers.size(); i < count; i++) {
             String name = headers.name(i);
+            String value = headers.value(i);
             if (!"Content-Type".equalsIgnoreCase(name) && !"Content-Length".equalsIgnoreCase(name)) {
-                logRequest.headers.put(headers.name(i), headers.value(i));
+                logRequest.headers.add(name + ": " + value);
             }
         }
 
@@ -162,9 +164,11 @@ public class NetLoggingInterceptor implements Interceptor {
         logResponse.message = response.message();
 
         Headers responseHeaders = response.headers();
-        logResponse.headers = new HashMap<>();
+        logResponse.headers = new ArrayList<>();
         for (int i = 0, count = responseHeaders.size(); i < count; i++) {
-            logResponse.headers.put(responseHeaders.name(i), responseHeaders.value(i));
+            String name = responseHeaders.name(i);
+            String value = responseHeaders.value(i);
+            logResponse.headers.add(name + ": " + value);
         }
 
         if (logResponse.headers.isEmpty()) {
@@ -222,5 +226,9 @@ public class NetLoggingInterceptor implements Interceptor {
 
     public interface HttpLogger {
         void log(HttpLogModel httpLogModel);
+    }
+
+    private void log(String str) {
+        Log.d("NetLoggingInterceptor", str);
     }
 }

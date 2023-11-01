@@ -50,6 +50,14 @@ public final class AndroidRemoteDebugger {
     }
 
     public synchronized static void init(final AndroidRemoteDebugger androidRemoteDebugger) {
+        init(androidRemoteDebugger, false, false);
+    }
+
+    public synchronized static void init(
+            final AndroidRemoteDebugger androidRemoteDebugger,
+            boolean autoAddInterceptor,
+            boolean appDebuggable
+    ) {
         if (isNotDefaultProcess(androidRemoteDebugger.builder.context)) {
             return;
         }
@@ -58,22 +66,6 @@ public final class AndroidRemoteDebugger {
         isEnable = androidRemoteDebugger.builder.enabled;
         isEnabledNotifications = androidRemoteDebugger.builder.enabledNotifications;
 
-        PineConfig.debug = true; // 是否debug，true会输出较详细log
-        PineConfig.debuggable = BuildConfig.DEBUG; // 该应用是否可调试，建议和配置文件中的值保持一致，否则会出现问题
-
-        XposedHelpers.findAndHookConstructor(
-                OkHttpClient.class,
-                OkHttpClient.Builder.class,
-                new XC_MethodHook() {
-                    @Override
-                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                        OkHttpClient.Builder builder = (OkHttpClient.Builder) param.args[0];
-                        builder.addInterceptor(new NetLoggingInterceptor());
-                        android.util.Log.d("123123", "beforeHookedMethod: ");
-                    }
-                }
-        );
-
         if (!isEnable) {
             stop();
             return;
@@ -81,6 +73,23 @@ public final class AndroidRemoteDebugger {
 
         if (isAliveWebServer()) {
             return;
+        }
+
+        if (autoAddInterceptor) {
+            PineConfig.debug = appDebuggable; // 是否debug，true会输出较详细log
+            PineConfig.debuggable = appDebuggable; // 该应用是否可调试，建议和配置文件中的值保持一致，否则会出现问题
+
+            XposedHelpers.findAndHookConstructor(
+                    OkHttpClient.class,
+                    OkHttpClient.Builder.class,
+                    new XC_MethodHook() {
+                        @Override
+                        protected void beforeHookedMethod(MethodHookParam param) {
+                            OkHttpClient.Builder builder = (OkHttpClient.Builder) param.args[0];
+                            builder.addInterceptor(new NetLoggingInterceptor());
+                        }
+                    }
+            );
         }
 
         final Builder builder = androidRemoteDebugger.builder;
