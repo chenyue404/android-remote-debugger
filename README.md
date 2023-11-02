@@ -1,3 +1,7 @@
+## Release note
+- 1.0.6 自动添加拦截器的时候，避免重复添加，避免顺序靠前，不再需要手动传入debug状态
+
+
 # Android Remote Debugger
 [![](https://jitpack.io/v/chenyue404/android-remote-debugger.svg)](https://jitpack.io/#chenyue404/android-remote-debugger)
 [![API](https://img.shields.io/badge/API-21%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=21)
