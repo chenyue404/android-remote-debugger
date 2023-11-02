@@ -39,7 +39,7 @@ afterEvaluate {
         publications {
             release(MavenPublication) {
                 from components.release
-                groupId = 'com.github.chenyue404'
+                groupId = 'com.local.chenyue404'
                 artifactId = 'androidremotedebugger'
                 version = '1.0.0'
             }

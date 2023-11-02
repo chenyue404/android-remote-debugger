@@ -20,8 +20,11 @@ import android.content.Context;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import top.canyie.pine.PineConfig;
 import zerobranch.androidremotedebugger.logging.DefaultLogger;
@@ -78,6 +81,7 @@ public final class AndroidRemoteDebugger {
         if (autoAddInterceptor) {
             PineConfig.debug = appDebuggable; // 是否debug，true会输出较详细log
             PineConfig.debuggable = appDebuggable; // 该应用是否可调试，建议和配置文件中的值保持一致，否则会出现问题
+            NetLoggingInterceptor netLoggingInterceptor = new NetLoggingInterceptor();
 
             XposedHelpers.findAndHookConstructor(
                     OkHttpClient.class,
@@ -86,7 +90,13 @@ public final class AndroidRemoteDebugger {
                         @Override
                         protected void beforeHookedMethod(MethodHookParam param) {
                             OkHttpClient.Builder builder = (OkHttpClient.Builder) param.args[0];
-                            builder.addInterceptor(new NetLoggingInterceptor());
+                            List<Interceptor> interceptors = builder.interceptors();
+                            for (int i = 0; i < interceptors.size(); i++) {
+                                if (interceptors.get(i) instanceof NetLoggingInterceptor) {
+                                    return;
+                                }
+                            }
+                            builder.addInterceptor(netLoggingInterceptor);
                         }
                     }
             );
