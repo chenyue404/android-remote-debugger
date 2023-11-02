@@ -17,6 +17,7 @@ package zerobranch.androidremotedebugger;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -53,13 +54,12 @@ public final class AndroidRemoteDebugger {
     }
 
     public synchronized static void init(final AndroidRemoteDebugger androidRemoteDebugger) {
-        init(androidRemoteDebugger, false, false);
+        init(androidRemoteDebugger, true);
     }
 
     public synchronized static void init(
             final AndroidRemoteDebugger androidRemoteDebugger,
-            boolean autoAddInterceptor,
-            boolean appDebuggable
+            boolean autoAddInterceptor
     ) {
         if (isNotDefaultProcess(androidRemoteDebugger.builder.context)) {
             return;
@@ -79,8 +79,9 @@ public final class AndroidRemoteDebugger {
         }
 
         if (autoAddInterceptor) {
-            PineConfig.debug = appDebuggable; // 是否debug，true会输出较详细log
-            PineConfig.debuggable = appDebuggable; // 该应用是否可调试，建议和配置文件中的值保持一致，否则会出现问题
+            boolean isApkInDebug = (androidRemoteDebugger.builder.context.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+            PineConfig.debug = isApkInDebug; // 是否debug，true会输出较详细log
+            PineConfig.debuggable = isApkInDebug; // 该应用是否可调试，建议和配置文件中的值保持一致，否则会出现问题
             NetLoggingInterceptor netLoggingInterceptor = new NetLoggingInterceptor();
 
             XposedHelpers.findAndHookConstructor(
