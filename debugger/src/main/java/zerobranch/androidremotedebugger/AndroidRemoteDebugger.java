@@ -20,7 +20,7 @@ import android.content.Context;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
+import java.util.Iterator;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
@@ -90,10 +90,11 @@ public final class AndroidRemoteDebugger {
                         @Override
                         protected void beforeHookedMethod(MethodHookParam param) {
                             OkHttpClient.Builder builder = (OkHttpClient.Builder) param.args[0];
-                            List<Interceptor> interceptors = builder.interceptors();
-                            for (int i = 0; i < interceptors.size(); i++) {
-                                if (interceptors.get(i) instanceof NetLoggingInterceptor) {
-                                    return;
+                            Iterator<Interceptor> iterator = builder.interceptors().iterator();
+                            while (iterator.hasNext()) {
+                                Interceptor interceptor = iterator.next();
+                                if (interceptor instanceof NetLoggingInterceptor) {
+                                    iterator.remove();
                                 }
                             }
                             builder.addInterceptor(netLoggingInterceptor);
