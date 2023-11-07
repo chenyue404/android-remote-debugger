@@ -1,3 +1,16 @@
+## Release note
+- 1.0.6
+  自动添加拦截器的时候，避免重复添加，避免顺序靠前，不再需要手动传入debug状态
+- 1.0.5
+  Header不去重
+- 1.0.4
+  滑动通知不消失
+- 1.0.3
+  修复复制body的bug
+- 1.0.2
+  点击复制body
+
+
 # Android Remote Debugger
 [![](https://jitpack.io/v/chenyue404/android-remote-debugger.svg)](https://jitpack.io/#chenyue404/android-remote-debugger)
 [![API](https://img.shields.io/badge/API-21%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=21)
