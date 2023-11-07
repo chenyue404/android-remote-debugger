@@ -45,6 +45,8 @@ public final class AndroidRemoteDebugger {
     private static boolean isEnable;
     private static boolean isEnabledNotifications;
 
+    private static int tryTimes = 0;
+
     private AndroidRemoteDebugger(Builder builder) {
         this.builder = builder;
     }
@@ -118,6 +120,12 @@ public final class AndroidRemoteDebugger {
         ServerRunner.getInstance().init(builder.context, internalSettings, builder.port, new ServerRunner.ConnectionStatus() {
             @Override
             public void onResult(boolean isSuccessRunning, String ipPort) {
+                if (isSuccessRunning) {
+                    tryTimes = 0;
+                } else if (tryTimes < 3) {
+                    reconnectWithNewPort();
+                    return;
+                }
                 if (isEnabledNotifications) {
                     AppNotification.init(builder.context);
 
@@ -179,7 +187,7 @@ public final class AndroidRemoteDebugger {
             }
             return;
         }
-
+        tryTimes++;
         int port = instance.builder.port;
         instance.builder.port = port >= MAX_PORT_VALUE ? DEFAULT_PORT : port + 1;
         init(instance);
