@@ -53,6 +53,8 @@ public class NetLoggingInterceptor implements Interceptor {
     private final HttpLogResponseMapper responseMapper = new HttpLogResponseMapper();
     private HttpLogger httpLogger;
 
+    private static final int MAX_CONTENT_LENGTH = 200000;
+
     public NetLoggingInterceptor() {
     }
 
@@ -101,7 +103,8 @@ public class NetLoggingInterceptor implements Interceptor {
                 }
             }
 
-            logRequest.bodySize = String.valueOf(requestBody.contentLength());
+            long requestBodyContentLength = requestBody.contentLength();
+            logRequest.bodySize = String.valueOf(requestBodyContentLength);
 
             Buffer buffer = new Buffer();
             requestBody.writeTo(buffer);
@@ -113,7 +116,11 @@ public class NetLoggingInterceptor implements Interceptor {
             }
 
             if (charset != null) {
-                logRequest.body = buffer.readString(charset);
+                if (requestBodyContentLength > MAX_CONTENT_LENGTH) {
+                    logRequest.body = "Too Big!!!";
+                } else {
+                    logRequest.body = buffer.readString(charset);
+                }
             }
         }
 
@@ -201,7 +208,11 @@ public class NetLoggingInterceptor implements Interceptor {
             }
 
             if (responseContentLength != 0 && charset != null) {
-                logResponse.body = buffer.clone().readString(charset);
+                if (responseContentLength > MAX_CONTENT_LENGTH) {
+                    logResponse.body = "Too Big!!!";
+                } else {
+                    logResponse.body = buffer.clone().readString(charset);
+                }
             }
         }
 
