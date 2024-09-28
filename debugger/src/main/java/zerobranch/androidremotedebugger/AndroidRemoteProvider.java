@@ -10,13 +10,6 @@ import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.util.Iterator;
-
-import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XposedHelpers;
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import top.canyie.pine.PineConfig;
 import zerobranch.androidremotedebugger.logging.NetLoggingInterceptor;
 
 /**
@@ -28,28 +21,28 @@ public class AndroidRemoteProvider extends ContentProvider {
         Context context = getContext();
         if (context == null) return true;
         boolean isApkInDebug = (context.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
-        PineConfig.debug = isApkInDebug; // 是否debug，true会输出较详细log
-        PineConfig.debuggable = isApkInDebug; // 该应用是否可调试，建议和配置文件中的值保持一致，否则会出现问题
+//        PineConfig.debug = isApkInDebug; // 是否debug，true会输出较详细log
+//        PineConfig.debuggable = isApkInDebug; // 该应用是否可调试，建议和配置文件中的值保持一致，否则会出现问题
         NetLoggingInterceptor netLoggingInterceptor = new NetLoggingInterceptor();
 
-        XposedHelpers.findAndHookConstructor(
-                OkHttpClient.class,
-                OkHttpClient.Builder.class,
-                new XC_MethodHook() {
-                    @Override
-                    protected void beforeHookedMethod(MethodHookParam param) {
-                        OkHttpClient.Builder builder = (OkHttpClient.Builder) param.args[0];
-                        Iterator<Interceptor> iterator = builder.interceptors().iterator();
-                        while (iterator.hasNext()) {
-                            Interceptor interceptor = iterator.next();
-                            if (interceptor instanceof NetLoggingInterceptor) {
-                                iterator.remove();
-                            }
-                        }
-                        builder.addInterceptor(netLoggingInterceptor);
-                    }
-                }
-        );
+//        XposedHelpers.findAndHookConstructor(
+//                OkHttpClient.class,
+//                OkHttpClient.Builder.class,
+//                new XC_MethodHook() {
+//                    @Override
+//                    protected void beforeHookedMethod(MethodHookParam param) {
+//                        OkHttpClient.Builder builder = (OkHttpClient.Builder) param.args[0];
+//                        Iterator<Interceptor> iterator = builder.interceptors().iterator();
+//                        while (iterator.hasNext()) {
+//                            Interceptor interceptor = iterator.next();
+//                            if (interceptor instanceof NetLoggingInterceptor) {
+//                                iterator.remove();
+//                            }
+//                        }
+//                        builder.addInterceptor(netLoggingInterceptor);
+//                    }
+//                }
+//        );
         return true;
     }
 

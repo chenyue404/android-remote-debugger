@@ -17,6 +17,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import zerobranch.androidremotedebugger.AndroidRemoteDebugger;
+import zerobranch.androidremotedebugger.logging.NetLoggingInterceptor;
 import zerobranch.example.db.DBHelper;
 
 public class MainActivity extends AppCompatActivity {
@@ -97,23 +98,23 @@ public class MainActivity extends AppCompatActivity {
             send("http://www.mocky.io/v2/5dfa884b2f00007200ff9a22"); // difficult link
         });
 
-//        findViewById(R.id.network3).setOnClickListener(v -> {
-//            send("http://www.mocky.io/v2/5d79ff7a320000749834ec26"); // empty
-//        });
-//
-//        findViewById(R.id.network4).setOnClickListener(v -> {
-//            send("http://www.mocky.io/v2/5d7bcf0a350000a96f3cadea"); // just link
-//        });
-//
-//        findViewById(R.id.network5).setOnClickListener(v -> {
-//            send("http://www.mocky.io/v2/5d90d3f63000002b00cacfe2"); // error
-//        });
+        findViewById(R.id.network3).setOnClickListener(v -> {
+            send("http://www.mocky.io/v2/5d79ff7a320000749834ec26"); // empty
+        });
+
+        findViewById(R.id.network4).setOnClickListener(v -> {
+            send("http://www.mocky.io/v2/5d7bcf0a350000a96f3cadea"); // just link
+        });
+
+        findViewById(R.id.network5).setOnClickListener(v -> {
+            send("http://www.mocky.io/v2/5d90d3f63000002b00cacfe2"); // error
+        });
     }
 
     private void send(String url) {
         new Thread(() -> {
             OkHttpClient client = new OkHttpClient.Builder()
-//                    .addInterceptor(new NetLoggingInterceptor())
+                    .addInterceptor(new NetLoggingInterceptor())
                     .build();
 
             RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), "{\"name\": \"Mercury\", \"radius\": 2439.7}");

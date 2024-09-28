@@ -9,9 +9,9 @@
         <receiver
             android:name=".NotificationReceiver"
             android:exported="false" />
-        <provider
-            android:name=".AndroidRemoteProvider"
-            android:authorities="${applicationId}.AndroidRemoteProvider"
-            android:exported="false" />
+        <!--        <provider-->
+        <!--            android:name=".AndroidRemoteProvider"-->
+        <!--            android:authorities="${applicationId}.AndroidRemoteProvider"-->
+        <!--            android:exported="false" />-->
     </application>
 </manifest>
